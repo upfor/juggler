@@ -2,13 +2,24 @@
 > PHP轻量级数据库(MySQL)框架
 
 
----
 ## 要求
 - PHP版本5.4及以上
 - 支持PDO, 已安装扩展`pdo_mysql`
 
 
----
+## 特性
+- 支持PHP版本5.4+，依赖PDO扩展
+- 常见数据库操作功能全部实现
+- WHERE组合条件上千种变化
+- 支持事务回调操作
+- 支持分片回调处理数据
+- 支持缓存查询数据
+- 支持多种联表查询
+- 支持多种数据绑定
+- 数据安全过滤保障
+- 引入、包装更简单
+
+
 ## 入门
 ```
 // Using Juggler namespace
@@ -34,10 +45,8 @@ $db->table('account')->insert(array(
 ```
 
 
----
 ## 使用
 
----
 ### 基础查询/执行
 
 #### query
@@ -76,7 +85,7 @@ public function query($sql, array $bindData = array(), $fetch = false, $unbuffer
 public function exec($sql, array $bindData = array(), $fetch = false) {...}
 ```
 
----
+
 ### 查询
     可与`table()`、`where()`、`limit()`、`order()`、`group`等方法联合使用。
 
@@ -258,7 +267,6 @@ $db->table('account')->where(array(
 
 
 
----
 ### 插入
     可与`table()`等方法联合使用。
 
@@ -357,7 +365,7 @@ $db->table('account')->insert(array(
 ), '`age`=VALUES(`age`) + 1');
 ```
 
----
+
 ### 修改
     可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
 
@@ -394,7 +402,7 @@ $db->update(array(
 ), 'account');
 ```
 
----
+
 ### 删除
 可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
 
@@ -424,7 +432,7 @@ $db->delete(array(
 ), 'account');
 ```
 
----
+
 ### WHERE
     Juggler 最核心、最强大的功能。支持多层级、多类型、多组合的WHERE查询条件表达式。
 
@@ -638,7 +646,7 @@ $db->table('account')->where(array(
 ))->getList();
 ```
 
----
+
 ### 功能
 #### dbname
     设置数据库名称
@@ -874,7 +882,7 @@ $db->table('account', 'A')->join(['money', 'M'], ['M.account_id' => 'A.id'])->ge
     获取数据库服务器&连接信息
 
 
----
+
 ### 事务
 
 #### beginTransaction
