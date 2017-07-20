@@ -1,29 +1,28 @@
 # Juggler
-> PHP lightweight database (MySQL) framework
+> PHP轻量级数据库(MySQL)框架
 
-[中文介绍](README_ZH.md)
-
-
-## Main Features
-- Common database operation functions
-- WHERE combination conditions vary
-- Supports transaction callback operations
-- Support for split - sheet callback processing data
-- Supports cache query data
-- Supports multiple table queries
-- Support multiple data bindings
-- Data security filtering guarantee
-- Introduction, packaging is easier
+[使用手册](doc/guide.md)
 
 
-## Requirement
-- PHP 5.4+
-- Support the PDO, extension `pdo_mysql` installed
+## 要求
+- PHP版本5.4及以上
+- 支持PDO, 已安装扩展`pdo_mysql`
 
 
-## Get Started
+## 特性
+- 常见数据库操作功能
+- WHERE 组合条件万千变化
+- 支持事务回调操作
+- 支持分片回调处理数据
+- 支持缓存查询数据
+- 支持多种联表查询
+- 支持多种数据绑定
+- 数据安全过滤保障
+- 引入、包装更简单
 
-Install via composer
+
+## 使用
+通过 Composer 安装
 ```
 $ composer require upfor/juggler
 ```
@@ -53,5 +52,5 @@ echo json_encode($data);
 ```
 
 
-## License
-**Juggler** is under the **MIT** license.
+## 协议
+**Juggler** 遵循 **MIT** 开源协议发布，并提供免费使用。

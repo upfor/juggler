@@ -18,7 +18,7 @@ use InvalidArgumentException;
 
 class Juggler {
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
 
     /**
      * @var PDO
@@ -565,7 +565,7 @@ class Juggler {
             if (!is_null($value)) {
                 $this->options['where'][$condition] = $value;
             } else {
-                $this->options['where']['SQL'] = $condition;
+                $this->options['where']['SQL'] = $condition; // Custom SQL
             }
         } elseif (is_array($condition)) {
             if (isset($this->options['where']) && is_array($this->options['where'])) {
@@ -607,11 +607,20 @@ class Juggler {
         $func = __FUNCTION__;
         $where = array();
 
+        // Is index array?
+        $isIndexArray = array_values($condition) === $condition;
+
         foreach ($condition as $key => $value) {
             $type = gettype($value);
 
             // SQL
             if ($key === 'SQL' && $type === 'string') {
+                $where[] = $value;
+                continue;
+            }
+
+            // Multi custom SQL
+            if ($isIndexArray) {
                 $where[] = $value;
                 continue;
             }
@@ -626,6 +635,11 @@ class Juggler {
             if ($key === 'OR' && $type === 'array') {
                 $where[] = $this->$func($value, 'OR');
                 continue;
+            }
+
+            // Multi custom SQL for sub statement
+            if (intval($key) == $key && $type === 'array' && array_values($value) === $value) {
+                $where[] = $this->$func($value, $implodeType);
             }
 
             $field = $operator = null;
