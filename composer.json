@@ -24,7 +24,7 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "ext-pdo_mysql": "For MySQL or MariaDB databases"
+    "ext-pdo_mysql": "*"
   },
   "require-dev": {
     "codeception/codeception": "~2.0"
