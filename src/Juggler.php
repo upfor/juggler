@@ -638,16 +638,24 @@ class Juggler {
             }
 
             // Multi custom SQL for sub statement
-            if (intval($key) == $key && $type === 'array' && array_values($value) === $value) {
-                $where[] = $this->$func($value, $implodeType);
+            if (strval(intval($key)) == strval($key)) {
+                if ($type === 'array' && array_values($value) === $value) {
+                    if (count($value) <= 0) {
+                        throw new InvalidArgumentException('Invalid param value for WHERE');
+                    }
+                    $where[] = $this->$func($value, $implodeType);
+                    continue;
+                } elseif ($type === 'string') {
+                    $where[] = $value;
+                    continue;
+                }
             }
 
-            $field = $operator = null;
+            $field = $key;
+            $operator = null;
             if (strpos($key, '|')) {
                 list($field, $operator) = explode('|', $key);
                 $operator = trim($operator);
-            } else {
-                $field = $key;
             }
             $field = $this->quoteKey(trim($field));
 
@@ -672,6 +680,9 @@ class Juggler {
                         break;
 
                     case 'array':
+                        if (count($value) <= 0) {
+                            throw new InvalidArgumentException('Invalid param value for WHERE');
+                        }
                         $where[] = $field . ' IN (' . $this->quoteValue($value) . ')';
                         break;
                     default:
@@ -699,6 +710,9 @@ class Juggler {
                         break;
 
                     case 'array':
+                        if (count($value) <= 0) {
+                            throw new InvalidArgumentException('Invalid param value for WHERE');
+                        }
                         $where[] = $field . ' NOT IN (' . $this->quoteValue($value) . ')';
                         break;
                     default:
