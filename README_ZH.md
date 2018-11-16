@@ -1,12 +1,12 @@
 # Juggler
-> PHP轻量级数据库(MySQL)框架
+> PHP 轻量级数据库(MySQL)框架
 
 [使用手册](doc/guide.md)
 
 
 ## 要求
-- PHP版本5.4及以上
-- 支持PDO, 已安装扩展`pdo_mysql`
+- PHP 版本 5.3 及以上
+- 支持 PDO, 已安装扩展`pdo_mysql`
 
 
 ## 特性
@@ -32,7 +32,7 @@ $ composer require upfor/juggler
 
 use Upfor\Juggler\Juggler;
 
-require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 // Config and connect server
 $config = array(
@@ -47,8 +47,9 @@ $config = array(
 $db = new Juggler($config);
 
 // SELECT `user_id`, `username` FROM `user` WHERE `user_id` >= 20
-$data = $db->table('user')->fetch()->field(['user_id', 'username'])->where('user_id|>=', 20)->getList();
+$data = $db->table('user')->field(array('user_id', 'username'))->where('user_id|>=', 20)->getList();
 echo json_encode($data);
+
 ```
 
 

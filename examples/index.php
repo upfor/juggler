@@ -2,7 +2,7 @@
 
 use Upfor\Juggler\Juggler;
 
-require '../vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 // Config and connect server
 $config = array(
@@ -17,6 +17,5 @@ $config = array(
 $db = new Juggler($config);
 
 // SELECT `user_id`, `username` FROM `user` WHERE `user_id` >= 20
-$data = $db->table('user')->field(['user_id', 'username'])->where('user_id|>=', 20)->getList();
+$data = $db->table('user')->field(array('user_id', 'username'))->where('user_id|>=', 20)->getList();
 echo json_encode($data);
-

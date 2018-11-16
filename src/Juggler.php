@@ -4,7 +4,7 @@
  * PHP database framework for MySQL
  * https://github.com/upfor/juggler
  *
- * Copyright 2017, Upfor Club
+ * Copyright 2018, Upfor Club
  * Released under the MIT license
  */
 
@@ -18,7 +18,20 @@ use InvalidArgumentException;
 
 class Juggler {
 
-    const VERSION = '1.0.1';
+    /**
+     * Keep only the latest one
+     */
+    const LOG_MODE_ONE = 1;
+
+    /**
+     * Keep only the specified number of logs
+     */
+    const LOG_MODE_MAX = 2;
+
+    /**
+     * Keep all
+     */
+    const LOG_MODE_ALL = 3;
 
     /**
      * @var PDO
@@ -73,6 +86,20 @@ class Juggler {
     protected $queryLog = array();
 
     /**
+     * Query log mode
+     *
+     * @var int
+     */
+    protected $logMode = self::LOG_MODE_ONE;
+
+    /**
+     * Number of logs kept
+     *
+     * @var int
+     */
+    public $logMaxNum = 100;
+
+    /**
      * Constructor
      * Connect to the database server
      *
@@ -97,6 +124,10 @@ class Juggler {
         }
         if (isset($config['charset']) && $config['charset']) {
             $dsn .= ';charset=' . trim($config['charset']);
+        }
+
+        if (isset($config['logMode'])) {
+            $this->logMode = $config['logMode'];
         }
 
         try {
@@ -390,7 +421,7 @@ class Juggler {
      * @return self
      */
     public function order($field, $order = null) {
-        if (!empty($order) && !in_array(strtoupper($order), ['DESC', 'ASC'])) {
+        if (!empty($order) && !in_array(strtoupper($order), array('DESC', 'ASC'))) {
             throw new InvalidArgumentException('Invalid param type for ORDER BY');
         }
 
@@ -441,7 +472,7 @@ class Juggler {
      * @return self
      */
     public function group($group, $order = null) {
-        if (!empty($order) && !in_array(strtoupper($order), ['DESC', 'ASC'])) {
+        if (!empty($order) && !in_array(strtoupper($order), array('DESC', 'ASC'))) {
             throw new InvalidArgumentException('Invalid param type for GROUP BY');
         }
 
@@ -1603,6 +1634,20 @@ class Juggler {
      * @param string $sql
      */
     protected function addQueryLog($sql) {
+        switch ($this->logMode) {
+            case self::LOG_MODE_ALL:
+                break;
+
+            case self::LOG_MODE_MAX:
+                $this->queryLog = array_slice($this->queryLog, -$this->logMaxNum + 1, $this->logMaxNum - 1);
+                break;
+
+            case self::LOG_MODE_ONE:
+            default:
+                $this->queryLog = array();
+                break;
+        }
+
         array_push($this->queryLog, $sql);
     }
 
@@ -1618,6 +1663,13 @@ class Juggler {
         }
 
         return $this->queryLog;
+    }
+
+    /**
+     * Clear the query logs
+     */
+    public function clearQueryLog() {
+        $this->queryLog = array();
     }
 
     /**

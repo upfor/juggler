@@ -17,7 +17,7 @@
 
 
 ## Requirement
-- PHP 5.4+
+- PHP 5.3+
 - Support the PDO, extension `pdo_mysql` installed
 
 
@@ -33,7 +33,7 @@ $ composer require upfor/juggler
 
 use Upfor\Juggler\Juggler;
 
-require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 // Config and connect server
 $config = array(
@@ -48,8 +48,9 @@ $config = array(
 $db = new Juggler($config);
 
 // SELECT `user_id`, `username` FROM `user` WHERE `user_id` >= 20
-$data = $db->table('user')->fetch()->field(['user_id', 'username'])->where('user_id|>=', 20)->getList();
+$data = $db->table('user')->field(array('user_id', 'username'))->where('user_id|>=', 20)->getList();
 echo json_encode($data);
+
 ```
 
 
