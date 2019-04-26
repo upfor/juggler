@@ -17,7 +17,7 @@
 
 
 ## Requirement
-- PHP 5.3+
+- PHP 5.5+
 - Support the PDO, extension `pdo_mysql` installed
 
 

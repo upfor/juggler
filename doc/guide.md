@@ -835,6 +835,36 @@ $db->table('account', 'A')->join(['money', 'M'], ['M.account_id' => 'A.id'])->ge
 #### escape
     设置是否对字段、表名、数据库名等进行包裹。系统默认会进行智能包裹。
 
+#### indexBy
+    设置 `getList()` 数据集的索引方式。支持按字段名或自定义进行索引。
+
+```php
+$db->table('country')->indexBy('code')->getList();
+
+// 或者:
+$data = $db->table('country')->indexBy(function ($row) {
+    return $row['code'];
+})->getList();
+
+// Output:
+Array
+(
+    [AU] => Array
+        (
+            [code] => AU
+            [name] => Australia
+            [population] => 18886000
+        )
+
+    [BR] => Array
+        (
+            [code] => BR
+            [name] => Brazil
+            [population] => 170115000
+        )
+)
+```
+
 #### fetch
     设置是否返回解析完成后的SQL语句。一般用于调试。
 

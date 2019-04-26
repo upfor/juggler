@@ -14,7 +14,7 @@
     {
       "name": "Upfor Club",
       "email": "team@upfor.club",
-      "homepage": "http://upfor.club"
+      "homepage": "https://upfor.club"
     },
     {
       "name": "Shocker Li",
@@ -23,8 +23,10 @@
     }
   ],
   "require": {
-    "php": ">=5.3",
-    "ext-pdo_mysql": "*"
+    "php": ">=5.5",
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "codeception/codeception": "~2.0"

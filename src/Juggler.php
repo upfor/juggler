@@ -4,7 +4,7 @@
  * PHP database framework for MySQL
  * https://github.com/upfor/juggler
  *
- * Copyright 2018, Upfor Club
+ * Copyright 2019, Upfor Club
  * Released under the MIT license
  */
 
@@ -16,7 +16,8 @@ use PDOException;
 use RuntimeException;
 use InvalidArgumentException;
 
-class Juggler {
+class Juggler
+{
 
     /**
      * Keep only the latest one
@@ -56,6 +57,13 @@ class Juggler {
      * @var array
      */
     protected $options = array();
+
+    /**
+     * How to sort the query results
+     *
+     * @var string|callable
+     */
+    protected $indexBy;
 
     /**
      * SQL binding data
@@ -106,7 +114,8 @@ class Juggler {
      * @param  array $config
      * @throws PDOException
      */
-    public function __construct(array $config) {
+    public function __construct(array $config)
+    {
         if (!isset($config['options'])) {
             $config['options'] = array();
         }
@@ -146,7 +155,8 @@ class Juggler {
      * @param  string $value
      * @return mixed
      */
-    public function dbConfig($config = null, $value = null) {
+    public function dbConfig($config = null, $value = null)
+    {
         if (!$config) {
             return $this->dbConfig;
         } elseif (is_array($config)) {
@@ -168,9 +178,10 @@ class Juggler {
      * Sets the database name
      *
      * @param  string $dbname
-     * @return self
+     * @return static
      */
-    public function dbname($dbname) {
+    public function dbname($dbname)
+    {
         $this->dbConfig['dbname'] = $dbname;
 
         return $this;
@@ -180,10 +191,11 @@ class Juggler {
      * Sets whether the distinct
      *
      * @param  boolean $distinct
-     * @return self
+     * @return static
      */
-    public function distinct($distinct) {
-        $this->options['distinct'] = (bool) $distinct;
+    public function distinct($distinct)
+    {
+        $this->options['distinct'] = (bool)$distinct;
 
         return $this;
     }
@@ -195,7 +207,8 @@ class Juggler {
      * @param  boolean $distinct
      * @return string
      */
-    protected function parseDistinct($distinct) {
+    protected function parseDistinct($distinct)
+    {
         return $distinct ? ' DISTINCT' : '';
     }
 
@@ -203,9 +216,10 @@ class Juggler {
      * Sets the select expression
      *
      * @param  mixed $field The select expressions
-     * @return self
+     * @return static
      */
-    public function field($field) {
+    public function field($field)
+    {
         if (is_string($field)) {
             $this->options['field'] = trim($field);
         } elseif (is_array($field)) {
@@ -230,7 +244,8 @@ class Juggler {
      * @param  mixed $fields Select expressions
      * @return string
      */
-    protected function parseField($fields) {
+    protected function parseField($fields)
+    {
         $fieldsStr = '*';
         if ('*' == $fields || !$fields) {
             $fieldsStr = '*';
@@ -249,7 +264,9 @@ class Juggler {
             $array = array();
             foreach ($fields as $key => $field) {
                 if (!is_numeric($key) && $key) {
-                    $array[] = (strpos($field, '*') !== false ? $field : $this->quoteKey($field)) . ' AS ' . $this->quoteKey($key);
+                    $array[] = (strpos($field, '*') !== false
+                            ? $field
+                            : $this->quoteKey($field)) . ' AS ' . $this->quoteKey($key);
                 } else {
                     $array[] = $this->quoteKey($field);
                 }
@@ -268,9 +285,10 @@ class Juggler {
      * @param  mixed   $table  Table name
      * @param  string  $alias  Table alias
      * @param  boolean $prefix The prefix of table name
-     * @return self
+     * @return static
      */
-    public function table($table, $alias = null, $prefix = false) {
+    public function table($table, $alias = null, $prefix = false)
+    {
         if (is_string($table) && $table) {
             $tableName = trim($table);
         } elseif (is_array($table)) {
@@ -313,7 +331,8 @@ class Juggler {
      * @param  array $table
      * @return string
      */
-    protected function parseTable($table) {
+    protected function parseTable($table)
+    {
         list($tableName, $alias) = $table;
         if (!empty($this->dbConfig['dbname']) && strpos($tableName, '.') !== false) {
             $tableName = $this->dbConfig['dbname'] . '.' . $tableName;
@@ -332,9 +351,10 @@ class Juggler {
      * @param  string|array $condition Join conditions
      * @param  string       $type      Join type
      * @param  boolean      $prefix    The prefix of table name
-     * @return self
+     * @return static
      */
-    public function join($table, $condition, $type = 'LEFT', $prefix = false) {
+    public function join($table, $condition, $type = 'LEFT', $prefix = false)
+    {
         $alias = null;
         if (is_string($table) && $table) {
             $tableName = trim($table);
@@ -379,7 +399,8 @@ class Juggler {
      * @param  array $join
      * @return string
      */
-    protected function parseJoin(array $join) {
+    protected function parseJoin(array $join)
+    {
         $joinOn = array();
         if (!empty($join)) {
             foreach ($join as $item) {
@@ -400,7 +421,8 @@ class Juggler {
      * @param  string|array $condition
      * @return string
      */
-    protected function buildOn($condition) {
+    protected function buildOn($condition)
+    {
         if (is_string($condition)) {
             return $condition;
         }
@@ -418,9 +440,10 @@ class Juggler {
      *
      * @param  string|array $field Field name, supports multiple definitions
      * @param  string       $order ASC or DESC, not case-sensitive
-     * @return self
+     * @return static
      */
-    public function order($field, $order = null) {
+    public function order($field, $order = null)
+    {
         if (!empty($order) && !in_array(strtoupper($order), array('DESC', 'ASC'))) {
             throw new InvalidArgumentException('Invalid param type for ORDER BY');
         }
@@ -445,7 +468,8 @@ class Juggler {
      * @param  string|array $order
      * @return string
      */
-    protected function parseOrder($order) {
+    protected function parseOrder($order)
+    {
         if (is_array($order)) {
             $array = array();
             foreach ($order as $key => $val) {
@@ -469,9 +493,10 @@ class Juggler {
      *
      * @param  string|array $group
      * @param  string       $order ASC or DESC, not case-sensitive
-     * @return self
+     * @return static
      */
-    public function group($group, $order = null) {
+    public function group($group, $order = null)
+    {
         if (!empty($order) && !in_array(strtoupper($order), array('DESC', 'ASC'))) {
             throw new InvalidArgumentException('Invalid param type for GROUP BY');
         }
@@ -496,7 +521,8 @@ class Juggler {
      * @param  string|array $group
      * @return string
      */
-    protected function parseGroup($group) {
+    protected function parseGroup($group)
+    {
         if (is_array($group)) {
             $array = array();
             foreach ($group as $key => $val) {
@@ -520,9 +546,10 @@ class Juggler {
      *
      * @param  integer|string $offset
      * @param  integer        $length
-     * @return self
+     * @return static
      */
-    public function limit($offset, $length = null) {
+    public function limit($offset, $length = null)
+    {
         if (is_null($length) && strpos($offset, ',')) {
             list($offset, $length) = explode(',', $offset);
         }
@@ -538,7 +565,8 @@ class Juggler {
      * @param  string $limit
      * @return string
      */
-    protected function parseLimit($limit) {
+    protected function parseLimit($limit)
+    {
         return $limit ? ' LIMIT ' . $limit : '';
     }
 
@@ -548,9 +576,10 @@ class Juggler {
      *
      * @param  integer|string $page     Page number
      * @param  integer        $listRows Page size
-     * @return self
+     * @return static
      */
-    public function page($page, $listRows = null) {
+    public function page($page, $listRows = null)
+    {
         if (is_null($listRows) && strpos($page, ',')) {
             list($page, $listRows) = explode(',', $page);
         }
@@ -564,9 +593,10 @@ class Juggler {
      *
      * @access protected
      * @param  array $options
-     * @return self
+     * @return static
      */
-    protected function setOptions(array $options) {
+    protected function setOptions(array $options)
+    {
         $this->options = $options;
 
         return $this;
@@ -578,20 +608,20 @@ class Juggler {
      * @param  string $name
      * @return mixed
      */
-    public function getOptions($name = null) {
+    public function getOptions($name = null)
+    {
         return ($name && isset($this->options[$name])) ? $this->options[$name] : $this->options;
     }
 
     /**
      * Sets the `WHERE` statement
      *
-     * @see    Function `buildWhere`
-     * @access protected
      * @param  mixed $condition Supports a variety of formats
      * @param  mixed $value     The value of condition
-     * @return self
+     * @return static
      */
-    public function where($condition, $value = null) {
+    public function where($condition, $value = null)
+    {
         if (is_string($condition)) {
             if (!is_null($value)) {
                 $this->options['where'][$condition] = $value;
@@ -616,7 +646,8 @@ class Juggler {
      * @param  array $condition
      * @return string
      */
-    protected function parseWhere($condition) {
+    protected function parseWhere($condition)
+    {
         $whereString = $this->buildWhere($condition, 'AND', true);
         if (empty($condition) || empty($whereString)) {
             return '';
@@ -634,7 +665,8 @@ class Juggler {
      * @param  boolean $root
      * @return string
      */
-    protected function buildWhere($condition, $implodeType = 'AND', $root = false) {
+    protected function buildWhere($condition, $implodeType = 'AND', $root = false)
+    {
         $func = __FUNCTION__;
         $where = array();
 
@@ -820,7 +852,8 @@ class Juggler {
      * @param  mixed $data
      * @return string
      */
-    protected function quoteValue($data) {
+    protected function quoteValue($data)
+    {
         if (is_null($data)) {
             return 'NULL';
         } elseif (is_bool($data)) {
@@ -856,7 +889,8 @@ class Juggler {
      * @param  string $key
      * @return string
      */
-    protected function quoteKey($key) {
+    protected function quoteKey($key)
+    {
         // Is escape identifiers?
         if (!$this->escape) {
             return $key;
@@ -906,9 +940,10 @@ class Juggler {
      *
      * @param  mixed  $key
      * @param  string $value
-     * @return self
+     * @return static
      */
-    public function bind($key, $value = null) {
+    public function bind($key, $value = null)
+    {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
                 $this->bind($k, $v);
@@ -925,16 +960,18 @@ class Juggler {
      *
      * @return array
      */
-    public function getBindData() {
-        return (array) $this->bindData;
+    public function getBindData()
+    {
+        return (array)$this->bindData;
     }
 
     /**
      * Clear binding data
      *
-     * @return self
+     * @return static
      */
-    public function clearBindData() {
+    public function clearBindData()
+    {
         $this->bindData = array();
 
         return $this;
@@ -947,7 +984,8 @@ class Juggler {
      * @param  string $data
      * @return boolean
      */
-    protected function isBindParam($data) {
+    protected function isBindParam($data)
+    {
         if (!is_string($data)) {
             return false;
         }
@@ -972,7 +1010,8 @@ class Juggler {
      * @param  array $bindData
      * @throws RuntimeException
      */
-    protected function bindValue(array $bindData = array()) {
+    protected function bindValue(array $bindData = array())
+    {
         foreach ($bindData as $key => $val) {
             $type = PDO::PARAM_STR;
             if (is_int($val)) {
@@ -1001,7 +1040,8 @@ class Juggler {
      * @param  array  $bindData
      * @return string
      */
-    protected function getBindSql($sql, array $bindData = array()) {
+    protected function getBindSql($sql, array $bindData = array())
+    {
         if ($bindData) {
             foreach ($bindData as $key => $val) {
                 $value = $this->quoteValue($val);
@@ -1038,7 +1078,8 @@ class Juggler {
      * @return array
      * @throws RuntimeException
      */
-    protected function parseOptions() {
+    protected function parseOptions()
+    {
         $options = $this->options;
         if (!isset($options['table']) || empty($options['table'])) {
             throw new RuntimeException('Parameter "table" is missing');
@@ -1086,7 +1127,8 @@ class Juggler {
      * @param  array $where
      * @return boolean
      */
-    public function has($where = array()) {
+    public function has($where = array())
+    {
         if ($where === true) {
             $this->fetch(true);
         } elseif ($where) {
@@ -1118,7 +1160,8 @@ class Juggler {
      * @param  string $field
      * @return integer
      */
-    public function count($field = '*') {
+    public function count($field = '*')
+    {
         if ($field != '*' && !is_numeric($field)) {
             $field = $this->quoteKey($field);
         }
@@ -1133,7 +1176,8 @@ class Juggler {
      * @param  string $field
      * @return integer
      */
-    public function sum($field) {
+    public function sum($field)
+    {
         $result = $this->value('SUM(' . $this->quoteKey($field) . ') AS `sum_total`');
 
         return $result !== false ? $result : false;
@@ -1145,7 +1189,8 @@ class Juggler {
      * @param  string $field
      * @return integer
      */
-    public function max($field) {
+    public function max($field)
+    {
         $result = $this->value('MAX(' . $this->quoteKey($field) . ') AS `max_tmp`');
 
         return $result !== false ? $result : false;
@@ -1157,7 +1202,8 @@ class Juggler {
      * @param  string $field
      * @return integer
      */
-    public function min($field) {
+    public function min($field)
+    {
         $result = $this->value('MIN(' . $this->quoteKey($field) . ') AS `min_tmp`');
 
         return $result !== false ? $result : false;
@@ -1169,7 +1215,8 @@ class Juggler {
      * @param  string $field
      * @return integer
      */
-    public function avg($field) {
+    public function avg($field)
+    {
         $result = $this->value('AVG(' . $this->quoteKey($field) . ') AS avg_tmp');
 
         return $result !== false ? $result : false;
@@ -1181,7 +1228,8 @@ class Juggler {
      * @param  string $field
      * @return mixed
      */
-    public function value($field) {
+    public function value($field)
+    {
         $data = $this->limit(1)->column($field);
         if (is_array($data) && isset($data[0])) {
             return $data[0];
@@ -1197,9 +1245,10 @@ class Juggler {
      * Gets the value of the specified column
      *
      * @param  string $field
-     * @return array
+     * @return mixed
      */
-    public function column($field) {
+    public function column($field)
+    {
         if (!is_string($field)) {
             return false;
         }
@@ -1216,21 +1265,22 @@ class Juggler {
             return array();
         }
 
-        $result = array();
-        if (!empty($data[0])) {
-            $keys = array_keys($data[0]);
-            foreach ($keys as $k) {
-                if (strpos($field, $k) !== false) {
-                    $field = $k;
-                    break;
-                }
-            }
-        }
-        foreach ($data as $row) {
-            $result[] = $row[$field];
+        return array_column($data, $field);
+    }
+
+    /**
+     * @param  string|callable $column The way which the query results should be indexed by
+     * @return static
+     */
+    public function indexBy($column)
+    {
+        if (empty($column) || (!is_string($column) && !is_callable($column))) {
+            throw new InvalidArgumentException('Invalid param type');
         }
 
-        return $result;
+        $this->indexBy = $column;
+
+        return $this;
     }
 
     /**
@@ -1240,7 +1290,8 @@ class Juggler {
      * @param  boolean    $unbuffered
      * @return array
      */
-    public function getList($data = null, $unbuffered = false) {
+    public function getList($data = null, $unbuffered = false)
+    {
         // Set options
         if (is_array($data)) {
             foreach ($data as $method => $val) {
@@ -1265,7 +1316,25 @@ class Juggler {
                 $this->parseLimit($options['limit']),
             ), $selectSql);
 
-        return $this->query($sql, $this->getBindData(), $data === true ? true : false, (bool) $unbuffered);
+        $result = $this->query($sql, $this->getBindData(), $data === true ? true : false, (bool)$unbuffered);
+
+        // Index results
+        if (is_array($result) && $this->indexBy) {
+            $rows = [];
+            foreach ($result as $row) {
+                if (is_callable($this->indexBy)) {
+                    $index = call_user_func($this->indexBy, $row);
+                } else {
+                    $index = $row[$this->indexBy];
+                }
+
+                $rows[$index] = $row;
+            }
+
+            return $rows;
+        }
+
+        return $result;
     }
 
     /**
@@ -1274,7 +1343,8 @@ class Juggler {
      * @param  array $data
      * @return array
      */
-    public function getRow($data = null) {
+    public function getRow($data = null)
+    {
         $this->limit(1);
         if (isset($data['limit'])) {
             unset($data['limit']);
@@ -1296,7 +1366,8 @@ class Juggler {
      * @param  boolean $fetch
      * @return integer
      */
-    public function delete(array $where = array(), $table = null, $fetch = false) {
+    public function delete(array $where = array(), $table = null, $fetch = false)
+    {
         if ($table) {
             $this->table($table);
         }
@@ -1333,7 +1404,8 @@ class Juggler {
      * @param  boolean $fetch
      * @return integer
      */
-    public function update(array $data, array $where = array(), $table = null, $fetch = false) {
+    public function update(array $data, array $where = array(), $table = null, $fetch = false)
+    {
         // Parse update data
         $data = $this->parseData($data);
         foreach ($data as $field => $value) {
@@ -1374,14 +1446,15 @@ class Juggler {
     /**
      * Insert new data
      *
-     * Support for bulk inserts, or updates while a duplicate value in a UNIQUE index or PRIMARY KEY
+     * Support for bulk inserts, or updates while a duplicate value in a UNIQUE INDEX or PRIMARY KEY
      *
      * @param  array   $data    The data to insert
      * @param  mixed   $replace Use sub statement `ON DUPLICATE KEY UPDATE` to replace existed data
      * @param  boolean $fetch   Is fetch the SQL statement?
      * @return integer
      */
-    public function insert(array $data, $replace = null, $fetch = false) {
+    public function insert(array $data, $replace = null, $fetch = false)
+    {
         // One insert data
         if (!is_array(reset($data))) {
             $data = array($data);
@@ -1471,7 +1544,8 @@ class Juggler {
      * @param  array $data
      * @return array
      */
-    protected function parseData(array $data) {
+    protected function parseData(array $data)
+    {
         $return = array();
         foreach ($data as $key => $val) {
             if (is_array($val)) {
@@ -1504,9 +1578,10 @@ class Juggler {
      * Is escape identifiers?
      *
      * @param  boolean $escape
-     * @return self
+     * @return static
      */
-    public function escape($escape = true) {
+    public function escape($escape = true)
+    {
         $this->escape = $escape ? true : false;
 
         return $this;
@@ -1516,9 +1591,10 @@ class Juggler {
      * Fetch the SQL statement
      *
      * @param  boolean $fetch
-     * @return self
+     * @return static
      */
-    public function fetch($fetch = true) {
+    public function fetch($fetch = true)
+    {
         $this->fetchSql = $fetch ? true : false;
 
         return $this;
@@ -1533,7 +1609,8 @@ class Juggler {
      * @param  boolean $unbuffered
      * @return mixed
      */
-    public function query($sql, array $bindData = array(), $fetch = false, $unbuffered = false) {
+    public function query($sql, array $bindData = array(), $fetch = false, $unbuffered = false)
+    {
         $sql = $this->parseSqlTable($sql);
         if (empty($bindData)) {
             $bindData = $this->getBindData();
@@ -1552,7 +1629,7 @@ class Juggler {
         }
 
         // Setting buffered query param
-        $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, !((bool) $unbuffered));
+        $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, !((bool)$unbuffered));
 
         // Prepare and execute sql
         $this->statement = $this->pdo->prepare($sql);
@@ -1579,7 +1656,8 @@ class Juggler {
      * @param  boolean $fetch
      * @return mixed
      */
-    public function exec($sql, array $bindData = array(), $fetch = false) {
+    public function exec($sql, array $bindData = array(), $fetch = false)
+    {
         $sql = $this->parseSqlTable($sql);
         if (empty($bindData)) {
             $bindData = $this->getBindData();
@@ -1619,21 +1697,23 @@ class Juggler {
      * @param  string $sql
      * @return string
      */
-    protected function parseSqlTable($sql) {
+    protected function parseSqlTable($sql)
+    {
         $prefix = isset($this->dbConfig['prefix']) ? $this->dbConfig['prefix'] : '';
 
         return preg_replace_callback("/#([A-Z0-9_-]+)#/sU", function ($match) use ($prefix) {
             return $prefix . strtolower($match[1]);
-        }, (string) $sql);
+        }, (string)$sql);
     }
 
     /**
      * Add a query log
      *
      * @access protected
-     * @param string $sql
+     * @param  string $sql
      */
-    protected function addQueryLog($sql) {
+    protected function addQueryLog($sql)
+    {
         switch ($this->logMode) {
             case self::LOG_MODE_ALL:
                 break;
@@ -1657,7 +1737,8 @@ class Juggler {
      * @param  boolean $isLast
      * @return mixed
      */
-    public function getQueryLog($isLast = false) {
+    public function getQueryLog($isLast = false)
+    {
         if ($isLast) {
             return end($this->queryLog);
         }
@@ -1668,7 +1749,8 @@ class Juggler {
     /**
      * Clear the query logs
      */
-    public function clearQueryLog() {
+    public function clearQueryLog()
+    {
         $this->queryLog = array();
     }
 
@@ -1677,7 +1759,8 @@ class Juggler {
      *
      * @return array
      */
-    public function errorInfo() {
+    public function errorInfo()
+    {
         return $this->statement->errorInfo();
     }
 
@@ -1686,7 +1769,8 @@ class Juggler {
      *
      * @return string
      */
-    public function lastInsertId() {
+    public function lastInsertId()
+    {
         return $this->pdo->lastInsertId();
     }
 
@@ -1695,7 +1779,8 @@ class Juggler {
      *
      * @return boolean
      */
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         if ($this->inTransaction()) {
             return true;
         }
@@ -1708,7 +1793,8 @@ class Juggler {
      *
      * @return boolean
      */
-    public function commit() {
+    public function commit()
+    {
         return $this->pdo->commit();
     }
 
@@ -1717,7 +1803,8 @@ class Juggler {
      *
      * @return boolean
      */
-    public function rollBack() {
+    public function rollBack()
+    {
         return $this->pdo->rollBack();
     }
 
@@ -1726,7 +1813,8 @@ class Juggler {
      *
      * @return boolean
      */
-    public function inTransaction() {
+    public function inTransaction()
+    {
         return $this->pdo->inTransaction();
     }
 
@@ -1737,7 +1825,8 @@ class Juggler {
      * @param  mixed    $params
      * @return boolean
      */
-    public function action(callable $callback, $params = null) {
+    public function action(callable $callback, $params = null)
+    {
         if (!is_callable($callback)) {
             throw new InvalidArgumentException('$callback is a invalid callback');
         }
@@ -1769,7 +1858,8 @@ class Juggler {
      * @param  array    $order
      * @return boolean
      */
-    public function chunk($size, callable $callback, array $where = array(), array $order = array()) {
+    public function chunk($size, callable $callback, array $where = array(), array $order = array())
+    {
         if ($where) {
             $this->where($where);
         }
@@ -1808,7 +1898,8 @@ class Juggler {
      * @param  array    $bindData
      * @return mixed
      */
-    public function unbufferedQuery(callable $callback = null, $sql = null, array $bindData = array()) {
+    public function unbufferedQuery(callable $callback = null, $sql = null, array $bindData = array())
+    {
         if (is_null($sql)) {
             $result = $this->getList(null, true);
         } else {
@@ -1825,10 +1916,13 @@ class Juggler {
             return false;
         }
 
+        // Data callback
         if (!is_null($callback) && is_callable($callback)) {
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 call_user_func($callback, $row);
             }
+
+            return true;
         }
 
         return $result;
@@ -1840,7 +1934,8 @@ class Juggler {
      * @param  mixed $table
      * @return array
      */
-    public function getFields($table = null) {
+    public function getFields($table = null)
+    {
         // Parse table name
         if ($table) {
             $this->table($table);
@@ -1876,7 +1971,8 @@ class Juggler {
      * @param  string $dbName
      * @return array
      */
-    public function getTables($dbName = null) {
+    public function getTables($dbName = null)
+    {
         if (empty($dbName) && !empty($this->dbConfig['dbname'])) {
             $dbName = $this->dbConfig['dbname'];
         }
@@ -1899,7 +1995,8 @@ class Juggler {
      *
      * @return array
      */
-    public function getServerInfo() {
+    public function getServerInfo()
+    {
         $output = array(
             'server' => PDO::ATTR_SERVER_INFO,
             'driver' => PDO::ATTR_DRIVER_NAME,

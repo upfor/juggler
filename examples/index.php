@@ -2,17 +2,17 @@
 
 use Upfor\Juggler\Juggler;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/src/Juggler.php';
 
 // Config and connect server
 $config = array(
     'host' => '127.0.0.1',
     'port' => 3306,
     'dbname' => 'db_name',
-    'username' => 'your_username',
-    'password' => 'your_password',
+    'username' => 'root',
+    'password' => 'root',
     'charset' => 'utf8',
-    'prefix' => 'db_pre_',
+    'prefix' => '',
 );
 $db = new Juggler($config);
 
