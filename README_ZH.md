@@ -23,11 +23,11 @@
 
 ## 使用
 通过 Composer 安装
-```
+```bash
 $ composer require upfor/juggler
 ```
 
-```
+```php
 <?php
 
 use Upfor\Juggler\Juggler;
@@ -49,9 +49,8 @@ $db = new Juggler($config);
 // SELECT `user_id`, `username` FROM `user` WHERE `user_id` >= 20
 $data = $db->table('user')->field(array('user_id', 'username'))->where('user_id|>=', 20)->getList();
 echo json_encode($data);
-
 ```
 
 
 ## 协议
-**Juggler** 遵循 **MIT** 开源协议发布，并提供免费使用。
+**Juggler** 遵循 [**MIT**](LICENSE) 开源协议发布，并提供免费使用。

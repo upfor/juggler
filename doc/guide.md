@@ -1,8 +1,8 @@
-# Juggler使用手册
+# Juggler 使用手册
 
 
 ## 入门
-```
+```php
 // Using Juggler namespace
 use Upfor\Juggler\Juggler;
 
@@ -31,12 +31,12 @@ $db->table('account')->insert(array(
 ### 基础查询/执行
 
 #### query
-    用于执行查询类SQL。
+用于执行查询类SQL
 
 - 成功，返回查询结果；失败，返回`FALSE`。
-- 支持unbuffered查询
+- 支持`unbuffered`查询
 
-```
+```php
 /**
  * Execute an SQL statement and return the result
  *
@@ -50,11 +50,12 @@ public function query($sql, array $bindData = array(), $fetch = false, $unbuffer
 ```
 
 #### exec
-    用于执行非查询类SQL。
+用于执行非查询类SQL，如`UPDATE`、`DELETE`、`INSERT`、`CREATE TABLE`、`ALTER`等
 
-- 成功，返回影响行数；失败，返回`FALSE`。
+- 成功，返回影响行数
+- 失败，返回 `FALSE`
 
-```
+```php
 /**
  * Execute an SQL statement and return the number of affected rows
  *
@@ -68,12 +69,12 @@ public function exec($sql, array $bindData = array(), $fetch = false) {...}
 
 
 ### 查询
-    可与`table()`、`where()`、`limit()`、`order()`、`group`等方法联合使用。
+可与 `table()`、`where()`、`limit()`、`order()`、`group` 等方法联合使用。
 
 #### getList
-    查询并获取多行数据
+查询并获取多行数据
 
-```
+```php
 // SELECT * FROM `account`
 $db->table('account')->getList()
 ```
@@ -81,15 +82,15 @@ $db->table('account')->getList()
 #### getRow
     查询并获取单行数据
 
-```
+```php
 // SELECT * FROM `account` LIMIT 1
 $db->table('account')->getRow();
 ```
 
 #### has
-    是否存在符合条件的数据
+是否存在符合条件的数据
 
-```
+```php
 /**
  * Determine whether the target data existed
  *
@@ -99,7 +100,7 @@ $db->table('account')->getRow();
 public function has($where = array()) {...}
 ```
 
-```
+```php
 // SELECT EXISTS(SELECT 1 FROM `account` WHERE `id` = 12) AS `tmp`
 $db->table('account')->where(array(
     'id' => 12,
@@ -107,9 +108,9 @@ $db->table('account')->where(array(
 ```
 
 #### count
-    统计满足条件的数据行数
+统计满足条件的数据行数
 
-```
+```php
 /**
  * Counts the number of rows
  *
@@ -119,7 +120,7 @@ $db->table('account')->where(array(
 public function count($field = '*') {...}
 ```
 
-```
+```php
 // SELECT COUNT(*) AS `count_total` FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -127,9 +128,9 @@ $db->table('account')->where(array(
 ```
 
 #### sum
-    计算符合条件数据的字段总和
+计算符合条件数据的字段总和
 
-```
+```php
 /**
  * Get the total value for the column
  *
@@ -139,7 +140,7 @@ $db->table('account')->where(array(
 public function sum($field) {...}
 ```
 
-```
+```php
 // SELECT SUM(`age`) AS `sum_total` FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -147,9 +148,9 @@ $db->table('account')->where(array(
 ```
 
 #### max
-    查询符合条件数据的字段最大值
+查询符合条件数据的字段最大值
 
-```
+```php
 /**
  * Get the maximum value for the column
  *
@@ -159,7 +160,7 @@ $db->table('account')->where(array(
 public function max($field) {...}
 ```
 
-```
+```php
 // SELECT MAX(`age`) AS `max_tmp` FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -167,9 +168,9 @@ $db->table('account')->where(array(
 ```
 
 #### min
-    查询符合条件数据的字段最小值
+查询符合条件数据的字段最小值
 
-```
+```php
 /**
  * Get the minimum value for the column
  *
@@ -179,7 +180,7 @@ $db->table('account')->where(array(
 public function min($field) {...}
 ```
 
-```
+```php
 // SELECT MIN(`age`) AS `min_tmp` FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -187,9 +188,9 @@ $db->table('account')->where(array(
 ```
 
 #### avg
-    查询符合条件数据的字段平均值
+查询符合条件数据的字段平均值
 
-```
+```php
 /**
  * Get the average value for the column
  *
@@ -199,7 +200,7 @@ $db->table('account')->where(array(
 public function avg($field) {...}
 ```
 
-```
+```php
 // SELECT AVG(`age`) AS avg_tmp FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -207,9 +208,9 @@ $db->table('account')->where(array(
 ```
 
 #### value
-    查询符合条件数据的第一行指定字段值
+查询符合条件数据的第一行指定字段值
 
-```
+```php
 /**
  * Gets the value of a field
  *
@@ -219,7 +220,7 @@ $db->table('account')->where(array(
 public function value($field) {...}
 ```
 
-```
+```php
 // SELECT `age` FROM `account` WHERE `id` >= 12 LIMIT 1
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -227,9 +228,9 @@ $db->table('account')->where(array(
 ```
 
 #### column
-    查询符合条件数据的指定字段(列)
+查询符合条件数据的指定字段(列)
 
-```
+```php
 /**
  * Gets the value of the specified column
  *
@@ -239,7 +240,7 @@ $db->table('account')->where(array(
 public function column($field) {...}
 ```
 
-```
+```php
 // SELECT `age` FROM `account` WHERE `id` >= 12
 $db->table('account')->where(array(
     'id|>=' => 12,
@@ -249,15 +250,15 @@ $db->table('account')->where(array(
 
 
 ### 插入
-    可与`table()`等方法联合使用。
+可与 `table()` 等方法联合使用。
 
 #### 参数
-    + 支持单条或批量插入。
-    + 插入数据必须是关联数组，即元素的键名就是字段名。
-    + 一维数组会被视为单条插入；二维数组会被视为批量插入；超过二维，则会对值进行自动转换成JSON字符串。
-    + 支持`ON DUPLICATE KEY UPDATE`进行数据更新。
+- 支持单条或批量插入。
+- 插入数据必须是关联数组，即元素的键名就是字段名。
+- 一维数组会被视为单条插入；二维数组会被视为批量插入；超过二维，则会对值进行自动转换成JSON字符串。
+- 支持 `ON DUPLICATE KEY UPDATE` 进行数据更新。
 
-```
+```php
 /**
  * Insert new data
  *
@@ -274,7 +275,7 @@ public function insert(array $data, $replace = null, $fetch = false) {...}
 #### 示例
 
 - 单条插入
-```
+```php
 // INSERT INTO `account` (`age`, `name`) VALUES (18, 'john')
 $db->table('account')->insert(array(
     'name' => 'john',
@@ -284,7 +285,7 @@ $db->table('account')->insert(array(
 
 - 批量插入
 
-```
+```php
 // INSERT INTO `account` (`age`, `name`) VALUES (18, 'john'), (20, 'mary')
 $db->table('account')->insert(array(
     array(
@@ -298,9 +299,9 @@ $db->table('account')->insert(array(
 ));
 ```
 
-- $replace: true, 全部字段更新
+- `$replace`: `true`, 全部字段更新
 
-```
+```php
 // INSERT INTO `account` (`age`, `name`) VALUES (18, 'john'), (20, 'mary') ON DUPLICATE KEY UPDATE `age`=VALUES(`age`), `name`=VALUES(`name`)
 $db->table('account')->insert(array(
     array(
@@ -314,9 +315,9 @@ $db->table('account')->insert(array(
 ), true);
 ```
 
-- $replace: array(var1, var2, ...), 更新指定字段
+- `$replace`: `array(var1, var2, ...)`, 更新指定字段
 
-```
+```php
 // INSERT INTO `account` (`age`, `name`) VALUES (18, 'john'), (20, 'mary') ON DUPLICATE KEY UPDATE `name`=VALUES(`name`)
 $db->table('account')->insert(array(
     array(
@@ -330,9 +331,9 @@ $db->table('account')->insert(array(
 ), array('name'));
 ```
 
-- $replace: string, 原生SQL子句
+- `$replace`: `string`, 原生SQL子句
 
-```
+```php
 // INSERT INTO `account` (`age`, `name`) VALUES (18, 'john'), (20, 'mary') ON DUPLICATE KEY UPDATE `age`=VALUES(`age`) + 1
 $db->table('account')->insert(array(
     array(
@@ -348,10 +349,10 @@ $db->table('account')->insert(array(
 
 
 ### 修改
-    可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
+可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
 
 #### 参数
-```
+```php
 /**
  * Update data
  *
@@ -365,7 +366,7 @@ public function update(array $data, array $where = array(), $table = null, $fetc
 ```
 
 #### 示例
-```
+```php
 // UPDATE `account` SET `name` = 'hello', `age` = 12 WHERE `id` = 108
 $db->table('account')->where(array(
     'id' => 108,
@@ -388,7 +389,7 @@ $db->update(array(
 可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
 
 #### 参数
-```
+```php
 /**
  * Conditionally delete data
  *
@@ -401,7 +402,7 @@ public function delete(array $where = array(), $table = null, $fetch = false) {.
 ```
 
 #### 示例
-```
+```php
 // DELETE FROM `account` WHERE `gid` IN (1, 2, 3)
 $db->table('account')->where(array(
     'gid' => array(1, 2, 3),
@@ -415,10 +416,10 @@ $db->delete(array(
 
 
 ### WHERE
-    Juggler 最核心、最强大的功能。支持多层级、多类型、多组合的WHERE查询条件表达式。
+Juggler 最核心、最强大的功能。支持多层级、多类型、多组合的`WHERE`查询条件表达式。
 
 #### 参数
-```
+```php
 /**
  * Sets the `WHERE` statement
  *
@@ -447,10 +448,11 @@ public function where($condition, $value = null) {
 }
 ```
 
-`$condition`: 支持单一字段, 复杂SQL, 多维数组, 复杂的条件表达式等
-`$value`: 当`$condition`作为数组类型的参数时, 无效
+`$condition`: 支持单一字段, 复杂SQL, 多维数组, 复杂的条件表达式等。
 
-```
+`$value`: 当`$condition`作为数组类型的参数时, 无效。
+
+```php
 // SELECT * FROM `account` WHERE `id` = 12
 $db->table('account')->where('id', 12)->getList();
 
@@ -478,7 +480,7 @@ $db->table('account')->where(array(
 支持的条件操作符: !, >, >=, <, <=, <>, ><, ~, !~
 
 - 无操作符 (`=`, `IN`, `IS NULL`)
-```
+```php
 // SELECT * FROM `account` WHERE `id` = 12
 $db->table('account')->where('id', 12)->getList();
 
@@ -495,7 +497,8 @@ $db->table('account')->where(array(
 ```
 
 - `!` (`!=`, `NOT IN`, `IS NOT NULL`)
-```
+
+```php
 // SELECT * FROM `account` WHERE `id` != 12
 $db->table('account')->where('id|!', 12)->getList();
 
@@ -509,7 +512,8 @@ $db->table('account')->where(array(
 ```
 
 - `<>`、`><` (`BETWEEN`, `NOT BETWEEN`)
-```
+
+```php
 // SELECT * FROM `account` WHERE `id` BETWEEN 100 AND 300
 $db->table('account')->where(array(
     'id|<>' => array(100, 300),
@@ -522,7 +526,8 @@ $db->table('account')->where(array(
 ```
 
 - `~`、`!~` (`LIKE`, `NOT LIKE`)
-```
+
+```php
 // SELECT * FROM `account` WHERE `url` LIKE '%qq.com%'
 $db->table('account')->where(array(
     'url|~' => 'qq.com',
@@ -553,10 +558,10 @@ $db->table('account')->where(array(
 目前，支持`AND`、`OR`、`SQL`3种组合语句。3种组合可以任意嵌套、组合使用。
 
 - `AND`
-对于数组，默认组合方式为`AND`，故可省略。
-一级条件，均为`AND`组合。
 
-```
+对于数组，默认组合方式为`AND`，故可省略。一级条件，均为`AND`组合。
+
+```php
 // SELECT * FROM `account` WHERE `username` = 'hello' AND `age` > 10
 $db->table('account')->where(array(
     'username' => 'hello',
@@ -587,9 +592,10 @@ $db->table('account')->where(array(
 ```
 
 - `OR`
+
 使用`OR`组合，可实现`WHERE`条件语句中的`OR`。
 
-```
+```php
 // SELECT * FROM `account` WHERE (`id` >= 12 OR `avatar` IS NOT NULL) AND `gid` IN (1, 2, 3) AND (`username` = 'hello' AND `age` > 10)
 $db->table('account')->where(array(
     'OR' => array(
@@ -605,10 +611,11 @@ $db->table('account')->where(array(
 ```
 
 - `SQL`
+
 使用`SQL`组合，可实现原生SQL语句。
 `SQL`组合可直接使用字符串类型的参数传入`where()`方法。
 
-```
+```php
 // SELECT * FROM `account` WHERE `id` >= 100 AND `username` LIKE '%john%'
 $db->table('account')->where("`id` >= 100 AND `username` LIKE '%john%'")->getList();
 
@@ -630,20 +637,20 @@ $db->table('account')->where(array(
 
 ### 功能
 #### dbname
-    设置数据库名称
+设置数据库名称
 
 #### distinct
-    设置`DISTINCT`子句
+设置`DISTINCT`子句
 
 #### field
-    指定查询的字段
+指定查询的字段
 
 - 支持字符串、数组、数值等
 - 支持字段别名
 - 对于普通字段，建议使用数据
 - 支持字段运算表达式
 
-```
+```php
 // SELECT RAND() AS `rand_str` FROM `account`
 $db->table('account')->field(array(
     'rand_str' => 'RAND()',
@@ -662,13 +669,13 @@ $db->table('account')->field('`username`, `age`, `age` * `score` AS `weight`')->
 ```
 
 #### table
-    指定查询的表名
+指定查询的表名
 
 - 支持别名、前缀
 - 支持数组形式传参
 - 数据库配置有前缀，则可用统一的前缀
 
-```
+```php
 /**
  * Sets the table name for current statement
  *
@@ -680,7 +687,7 @@ $db->table('account')->field('`username`, `age`, `age` * `score` AS `weight`')->
 public function table($table, $alias = null, $prefix = false) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account`
 $db->table('account')->getList();
 
@@ -702,12 +709,12 @@ $db->table('account', 'a', true)->getList();
 ```
 
 #### order
-    指定排序方式
+指定排序方式
 
 - 支持多字段排序
 - 支持数组传参
 
-```
+```php
 /**
  * Sets the `ORDER BY` statement
  *
@@ -718,7 +725,7 @@ $db->table('account', 'a', true)->getList();
 public function order($field, $order = null) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account` ORDER BY `id`
 $db->table('account')->order('id')->getList();
 
@@ -733,12 +740,12 @@ $db->table('account')->order(array(
 ```
 
 #### group
-    指定`GROUP BY`聚合子句
+指定`GROUP BY`聚合子句
 
 - 支持多字段聚合
 - 支持聚合排序
 
-```
+```php
 /**
  * Sets the `GROUP BY` statement
  *
@@ -749,7 +756,7 @@ $db->table('account')->order(array(
 public function group($group, $order = null) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account` GROUP BY `id`, `age`
 $db->table('account')->group(array(
     'id',
@@ -772,9 +779,9 @@ $db->table('account')->group('year ASC, country ASC, product ASC WITH ROLLUP')->
 ```
 
 #### limit
-    设置`LIMIT`子句
+设置`LIMIT`子句
 
-```
+```php
 /**
  * Sets the `LIMIT` statement
  *
@@ -785,7 +792,7 @@ $db->table('account')->group('year ASC, country ASC, product ASC WITH ROLLUP')->
 public function limit($offset, $length = null) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account` LIMIT 5
 $db->table('account')->limit(5)->getList();
 
@@ -794,9 +801,9 @@ $db->table('account')->limit(11, 10)->getList();
 ```
 
 #### page
-    设置分页参数，转换为`LIMIT`子句
+设置分页参数，转换为`LIMIT`子句
 
-```
+```php
 /**
  * Sets the page of the data
  * A more vivid way of get range values
@@ -808,15 +815,15 @@ $db->table('account')->limit(11, 10)->getList();
 public function page($page, $listRows = null) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account` LIMIT 100, 10
 $db->table('account')->page(11, 10)->getList();
 ```
 
 #### join
-    联表查询`JOIN`子句
+联表查询`JOIN`子句
 
-```
+```php
 /**
  * @param  string|array $table     Join table(s)
  * @param  string|array $condition Join conditions
@@ -827,16 +834,16 @@ $db->table('account')->page(11, 10)->getList();
 public function join($table, $condition, $type = 'LEFT', $prefix = false) {...}
 ```
 
-```
+```php
 // SELECT * FROM `account` AS `A` LEFT JOIN `money` AS `M` ON `M`.`account_id` = `A`.`id`
 $db->table('account', 'A')->join(['money', 'M'], ['M.account_id' => 'A.id'])->getList();
 ```
 
 #### escape
-    设置是否对字段、表名、数据库名等进行包裹。系统默认会进行智能包裹。
+设置是否对字段、表名、数据库名等进行包裹。系统默认会进行智能包裹。
 
 #### indexBy
-    设置 `getList()` 数据集的索引方式。支持按字段名或自定义进行索引。
+设置 `getList()` 数据集的索引方式。支持按字段名或自定义进行索引。
 
 ```php
 $db->table('country')->indexBy('code')->getList();
@@ -866,48 +873,48 @@ Array
 ```
 
 #### fetch
-    设置是否返回解析完成后的SQL语句。一般用于调试。
+设置是否返回解析完成后的SQL语句。一般用于调试。
 
 #### getQueryLog
-    获取SQL执行日志
+获取SQL执行日志
 
 #### errorInfo
-    获取最后一条SQL执行错误信息
+获取最后一条SQL执行错误信息
 
 #### lastInsertId
-    获取最后一条SQL产生的插入ID
+获取最后一条SQL产生的插入ID
 
 #### chunk
-    分块/分批处理数据
+分块/分批处理数据
 
 #### unbufferedQuery
-    缓冲式查询SQL
+缓冲式查询SQL
 
 #### getFields
-    获取表的字段信息
+获取表的字段信息
 
 #### getTables
-    获取数据库所有数据表
+获取数据库所有数据表
 
 #### getServerInfo
-    获取数据库服务器&连接信息
+获取数据库服务器&连接信息
 
 
 
 ### 事务
 
 #### beginTransaction
-    开始事务
+开始事务
 
 #### commit
-    提交事务
+提交事务
 
 #### rollBack
-    回滚事务
+回滚事务
 
 #### inTransaction
-    是否处于事务状态
+是否处于事务状态
 
 #### action
-    回调形式执行事务
+回调形式执行事务
 

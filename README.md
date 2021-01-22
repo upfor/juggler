@@ -24,11 +24,11 @@
 ## Get Started
 
 Install via composer
-```
+```bash
 $ composer require upfor/juggler
 ```
 
-```
+```php
 <?php
 
 use Upfor\Juggler\Juggler;
@@ -50,9 +50,8 @@ $db = new Juggler($config);
 // SELECT `user_id`, `username` FROM `user` WHERE `user_id` >= 20
 $data = $db->table('user')->field(array('user_id', 'username'))->where('user_id|>=', 20)->getList();
 echo json_encode($data);
-
 ```
 
 
 ## License
-**Juggler** is under the **MIT** license.
+**Juggler** is under the [**MIT**](LICENSE) license.
