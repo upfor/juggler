@@ -1,39 +1,40 @@
 {
-  "name": "upfor/juggler",
-  "type": "library",
-  "description": "A lightest yet powerful PHP database framework",
-  "keywords": [
-    "framework",
-    "php",
-    "upfor",
-    "mysql"
-  ],
-  "homepage": "https://github.com/upfor/juggler",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Upfor Club",
-      "email": "team@upfor.club",
-      "homepage": "https://upfor.club"
+    "name": "upfor/juggler",
+    "type": "library",
+    "description": "A lightest yet powerful PHP database framework",
+    "keywords": [
+        "framework",
+        "php",
+        "upfor",
+        "mysql"
+    ],
+    "homepage": "https://github.com/upfor/juggler",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Upfor Club",
+            "email": "team@upfor.club",
+            "homepage": "https://upfor.club"
+        },
+        {
+            "name": "shockerli",
+            "email": "shockerli@upfor.club",
+            "homepage": "http://shockerli.net"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=5.5",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ext-pdo": "*"
     },
-    {
-      "name": "Shocker Li",
-      "email": "shockerli@upfor.club",
-      "homepage": "http://shockerli.net"
+    "require-dev": {
+        "phpunit/phpunit": "^6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Upfor\\Juggler\\": "src/"
+        }
     }
-  ],
-  "require": {
-    "php": ">=5.5",
-    "ext-mbstring": "*",
-    "ext-json": "*",
-    "ext-pdo": "*"
-  },
-  "require-dev": {
-    "codeception/codeception": "~2.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Upfor\\Juggler\\": "src/"
-    }
-  }
 }
