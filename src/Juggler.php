@@ -874,7 +874,7 @@ class Juggler
                 $temp[] = $this->quoteValue($row);
             }
 
-            return implode($temp, ', ');
+            return implode(', ', $temp);
         } elseif (!is_scalar($data)) {
             throw new RuntimeException("Quote value must be a scalar variable");
         }
