@@ -814,7 +814,10 @@ class Juggler
                     // Bind placeholder
                     if ($this->isBindParam($item)) {
                         $likeValue = $item;
-                    } elseif ($suffix != '%' && $item{0} != '%') {
+                    }
+                    // fix: since 7.4, the array and string offset access syntax using curly braces is deprecated.
+                    // official doc: https://www.php.net/manual/en/migration74.deprecated.php
+                    elseif ($suffix != '%' && $item[0] != '%') {
                         $likeValue = '%' . $item . '%';
                     }
                     $like[] = $field . ($operator == '!~' ? ' NOT' : '') . ' LIKE ' . $this->quoteValue($likeValue);
