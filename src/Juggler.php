@@ -10,11 +10,11 @@
 
 namespace Upfor\Juggler;
 
-use PDO;
-use PDOStatement;
-use PDOException;
-use RuntimeException;
 use InvalidArgumentException;
+use PDO;
+use PDOException;
+use PDOStatement;
+use RuntimeException;
 
 class Juggler
 {
@@ -1265,7 +1265,14 @@ class Juggler
             return array();
         }
 
-        return array_column($data, $field);
+        // fetch first column for alias field
+        $keys = array_keys(reset($data));
+        $key  = reset($keys);
+        if (in_array($field, $keys)) {
+            $key = $field;
+        }
+
+        return array_column($data, $key);
     }
 
     /**
