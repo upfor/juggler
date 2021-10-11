@@ -1,4 +1,5 @@
 # Juggler 使用手册
+> 声明：文档并不能将所有用法写出来，具体的问题请翻阅源码，如有 bug 或未实现的功能，请提交 issue 或 pull request
 
 
 ## 入门
@@ -347,6 +348,18 @@ $db->table('account')->insert(array(
 ), '`age`=VALUES(`age`) + 1');
 ```
 
+- 插入值支持表达式
+
+> 操作符 `r`，表示该值作为原始表达式执行
+
+```php
+// INSERT INTO `user` (`age`, `sex`) VALUES (19, age % 18)
+$db->table('account')->insert([
+    'sex|r' => 'age % 18',
+    'age'   => 18,
+])
+```
+
 
 ### 修改
 可与`table()`、`where()`、`limit()`、`order()`等方法联合使用。
@@ -382,6 +395,18 @@ $db->update(array(
 ), array(
     'id' => 108,
 ), 'account');
+```
+
+- 更新值支持表达式
+
+> 操作符 `r`，表示该值作为原始表达式执行
+
+```php
+// UPDATE `user` SET `sex` = 1, `age` = `age` + 1 WHERE `id` = 1
+$db->table('user')->where('id', 1)->update([
+    'sex' => 1,
+    'age|r' => '`age` + 1',
+])
 ```
 
 

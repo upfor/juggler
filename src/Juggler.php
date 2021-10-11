@@ -938,6 +938,11 @@ class Juggler
         return implode('.', $key);
     }
 
+    private function rawKey($key)
+    {
+        return str_replace('`', '', $key);
+    }
+
     /**
      * Sets the binding data
      *
@@ -1472,27 +1477,27 @@ class Juggler
 
         // Building fields and values
         $diffRow = reset($data);
+        $diffRow = $this->parseData($diffRow);
         ksort($diffRow);
         $keyCount = count($diffRow);
-        $fields = array_keys($diffRow);
-        $insertFields = array_map(function ($val) {
-            return $this->quoteKey($val);
-        }, $fields);
+        $insertFields = array_keys($diffRow);
+        $rawFields = array_map(function ($val) {
+            return $this->rawKey($val);
+        }, $insertFields);
         $insertValues = array();
         foreach ($data as $rowData) {
+            $rowData = $this->parseData($rowData);
+            if (!$rowData) {
+                throw new InvalidArgumentException('Unexpected data for INSERT');
+            }
+
             if (count($rowData) != $keyCount) {
                 throw new InvalidArgumentException('Unexpected data for INSERT');
             }
 
+            ksort($rowData);
             $rowData = array_intersect_key($rowData, $diffRow);
             if (count($rowData) < $keyCount) {
-                throw new InvalidArgumentException('Unexpected data for INSERT');
-            }
-
-            ksort($rowData);
-
-            $rowData = $this->parseData($rowData);
-            if (!$rowData) {
                 throw new InvalidArgumentException('Unexpected data for INSERT');
             }
 
@@ -1504,7 +1509,7 @@ class Juggler
         if (is_array($replace) && $replace) {
             $replaceStr = array();
             foreach ($replace as $field) {
-                if (!in_array($field, $fields)) {
+                if (!in_array($this->rawKey($field), $rawFields)) {
                     throw new InvalidArgumentException('Invalid update field');
                 }
 
@@ -1515,8 +1520,8 @@ class Juggler
             $replaceStr = trim($replace);
         } elseif ($replace === true) {
             $replaceStr = array();
-            foreach ($fields as $field) {
-                $replaceStr[] = $this->quoteKey($field) . '=VALUES(' . $this->quoteKey($field) . ')';
+            foreach ($insertFields as $field) {
+                $replaceStr[] = $field . '=VALUES(' . $field . ')';
             }
             $replaceStr = implode(', ', $replaceStr);
         }
@@ -1558,6 +1563,16 @@ class Juggler
     {
         $return = array();
         foreach ($data as $key => $val) {
+            // raw SQL expression
+            if (strpos($key, '|')) {
+                list($field, $operator) = explode('|', $key);
+                $key = trim($field);
+                if (strtolower(trim($operator)) == 'r') {
+                    $return[$this->quoteKey($key)] = $val;
+                }
+                continue;
+            }
+
             if (is_array($val)) {
                 // Convert array to a JSON string
                 if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
